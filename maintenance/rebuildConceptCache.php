@@ -97,6 +97,7 @@ class RebuildConceptCache extends \Maintenance {
 
 		$this->addOption( 'update', 'Process only concepts that already have some cache, i.e. do not create any new caches. ' .
 								'For the opposite (only concepts without caches), use --old with a very high number.' );
+		$this->addOption( 'with-log', 'Add a log entry for the maintenance run', false );
 
 		$this->addOption( 'old', '<min> Process only concepts with caches older than <min> minutes or with no caches at all.', false, true );
 		$this->addOption( 's', '<startid> Process only concepts with page id of at least <startid>', false, true );
@@ -141,6 +142,11 @@ class RebuildConceptCache extends \Maintenance {
 
 		if ( $result && $this->hasOption( 'report-runtime' ) ) {
 			$this->reportMessage( "\n" . $maintenanceHelper->transformRuntimeValuesForOutput() . "\n" );
+		}
+
+		if ( $this->hasOption( 'with-log' ) ) {
+			$maintenanceLogger = $maintenanceFactory->newMaintenanceLogger( 'RebuildConceptCache' );
+			$maintenanceLogger->log( $maintenanceHelper->transformRuntimeValuesForOutput() );
 		}
 
 		$maintenanceHelper->reset();

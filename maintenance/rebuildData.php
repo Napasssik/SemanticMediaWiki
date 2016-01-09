@@ -86,6 +86,7 @@ class RebuildData extends \Maintenance {
 
 		$this->addOption( 'skip-properties', 'Skip the default properties rebuild (only recommended when successive build steps are used)', false );
 		$this->addOption( 'shallow-update', 'Skip processing of entitites that compare to the last known revision date', false );
+		$this->addOption( 'with-log', 'Add a log entry for the maintenance run', false );
 
 		$this->addOption( 'page', '<pagelist> Will refresh only the pages of the given names, with | used as a separator. ' .
 								'Example: --page "Page 1|Page 2" refreshes Page 1 and Page 2 Options -s, -e, -n, ' .
@@ -142,6 +143,11 @@ class RebuildData extends \Maintenance {
 
 		if ( $result && $this->hasOption( 'report-runtime' ) ) {
 			$this->reportMessage( "\n" . $maintenanceHelper->transformRuntimeValuesForOutput() . "\n" );
+		}
+
+		if ( $this->hasOption( 'with-log' ) ) {
+			$maintenanceLogger = $maintenanceFactory->newMaintenanceLogger( 'RebuildData' );
+			$maintenanceLogger->log( $maintenanceHelper->transformRuntimeValuesForOutput() );
 		}
 
 		$maintenanceHelper->reset();

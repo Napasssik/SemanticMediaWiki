@@ -5,6 +5,7 @@ namespace SMW\Maintenance;
 use SMW\Store;
 use SMW\ApplicationFactory;
 use SMW\Store\PropertyStatisticsStore;
+use SMW\MediaWiki\ManualEntryLogger;
 
 /**
  * @license GNU GPL v2+
@@ -55,6 +56,17 @@ class MaintenanceFactory {
 	 */
 	public function newPropertyStatisticsRebuilder( Store $store, PropertyStatisticsStore $propertyStatisticsStore ) {
 		return new PropertyStatisticsRebuilder( $store, $propertyStatisticsStore );
+	}
+
+	/**
+	 * @since 2.4
+	 *
+	 * @param string $target
+	 *
+	 * @return MaintenanceLogger
+	 */
+	public function newMaintenanceLogger( $target ) {
+		return new MaintenanceLogger( $target, new ManualEntryLogger() );
 	}
 
 }
